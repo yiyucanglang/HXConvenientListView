@@ -48,7 +48,7 @@
     static id<HXConvenientViewProtocol> view;
     Class class = NSClassFromString(self.viewClassName);
     if (!view || ![view isKindOfClass:class]) {
-        view = [[NSClassFromString(self.viewClassName) alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, 0)];
+        view = [[NSClassFromString(self.viewClassName) alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
     }
     [view bindingModel:self];
 }

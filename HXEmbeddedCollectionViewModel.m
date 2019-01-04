@@ -18,6 +18,7 @@
         self.backgroundColor = [UIColor whiteColor];
         self.minimumInteritemSpacing = 0;
         self.minimumLineSpacing = 0;
+        self.customLayoutClass = [UICollectionViewFlowLayout class];
     }
     return self;
 }
@@ -38,10 +39,6 @@
         _sourceArray = [NSMutableArray array];
     }
     return _sourceArray;
-}
-
-- (Class)customLayoutClass {
-    return [UICollectionViewFlowLayout class];
 }
 
 #pragma mark - Dealloc

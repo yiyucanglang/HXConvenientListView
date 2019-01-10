@@ -10,10 +10,7 @@
 #import "HXEmbeddedCollectionViewModel.h"
 
 @interface HXEmbeddedCollectionView()
-<
-    UICollectionViewDataSource,
-    UICollectionViewDelegateFlowLayout
->
+
 @end
 
 

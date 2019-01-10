@@ -11,6 +11,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HXEmbeddedCollectionView : HXBaseConvenientView
+<
+UICollectionViewDataSource,
+UICollectionViewDelegateFlowLayout
+>
 @property (nonatomic, strong) HXConvenientCollectionView *collectionView;
 @end
 

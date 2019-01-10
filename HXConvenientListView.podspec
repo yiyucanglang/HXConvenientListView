@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name             = 'HXConvenientListView'
-  s.version          = '0.0.2'
-  s.summary          = '简化使用列表对象时的代码量书写,例如数据源配置、事件回调'
+  s.version          = '0.0.3'
+  s.summary          = '简化使用列表对象时的代码书写量,例如数据源配置、事件回调'
 
   s.homepage         = 'https://gitee.com/huanxiong'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }

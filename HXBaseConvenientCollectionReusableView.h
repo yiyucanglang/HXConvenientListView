@@ -5,6 +5,10 @@
 //  Created by 周义进 on 2018/12/30.
 //
 
+#ifndef HXConvenientDefaultItemView
+#define HXConvenientDefaultItemView
+#endif
+
 #import <UIKit/UIKit.h>
 #import "HXViewConvenientProtocol.h"
 

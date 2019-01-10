@@ -53,10 +53,24 @@
 >
 @property (nonatomic, strong) HXCollectionViewPropertyInterceptor *delegateInterceptor;
 @property (nonatomic, strong) HXCollectionViewPropertyInterceptor *datasourceInterceptor;
+
+@property (nonatomic, strong) id<UICollectionViewDelegate> innerDelegate;
+
+@property (nonatomic, strong) id<UICollectionViewDataSource> innerDatasource;
+
 @end
 
 @implementation HXConvenientCollectionView
 #pragma mark - Life Cycle
+- (instancetype)initWithFrame:(CGRect)frame collectionViewLayout:(UICollectionViewLayout *)layout {
+    if(self = [super initWithFrame:frame collectionViewLayout:layout]) {
+        self.innerDelegate = (id<UICollectionViewDelegate>)[NSObject new];
+        self.innerDatasource = (id<UICollectionViewDataSource>)[NSObject new];
+        self.dataSource = self.innerDatasource;
+        self.delegate   = self.innerDelegate;
+    }
+    return self;
+}
 
 #pragma mark - System Method
 - (void)setDataSource:(id<UICollectionViewDataSource>)dataSource {

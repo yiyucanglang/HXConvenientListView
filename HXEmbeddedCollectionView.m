@@ -26,6 +26,13 @@
 #pragma mark - Life Cycle
 
 #pragma mark - System Method
+- (void)layoutSubviews {
+    if (self.frame.size.width == self.dataModel.tableView.frame.size.width) {
+        [self.collectionView reloadData];
+    }
+    [super layoutSubviews];
+    
+}
 
 #pragma mark - Public Method
 - (void)bindingModel:(HXEmbeddedCollectionViewModel *)dataModel {
@@ -36,10 +43,12 @@
     [self layoutIfNeeded];
     
     self.collectionView.sourceArr = dataModel.sourceArray;
-    [self.collectionView reloadData];
     
-    if(CGPointEqualToPoint(dataModel.contentOffset, CGPointZero)) {
+    if (self.frame.size.width == self.dataModel.tableView.frame.size.width) {
+        [self.collectionView reloadData];
+    }
 
+    if(CGPointEqualToPoint(dataModel.contentOffset, CGPointZero)) {
         self.collectionView.contentOffset = CGPointMake(-dataModel.contentInset.left, -dataModel.contentInset.top);
     }
     else {
@@ -67,7 +76,7 @@
     layout.minimumLineSpacing      = dataModel.minimumLineSpacing;
     layout.minimumInteritemSpacing = dataModel.minimumInteritemSpacing;
     self.collectionView.showsHorizontalScrollIndicator = dataModel.showsHorizontalScrollIndicator;
-    self.collectionView.showsHorizontalScrollIndicator = dataModel.showsHorizontalScrollIndicator;
+    self.collectionView.showsVerticalScrollIndicator = dataModel.showsVerticalScrollIndicator;
     self.collectionView.pagingEnabled = dataModel.pagingEnabled;
     self.collectionView.scrollEnabled = dataModel.scrollEnabled;
     self.collectionView.contentInset = dataModel.contentInset;

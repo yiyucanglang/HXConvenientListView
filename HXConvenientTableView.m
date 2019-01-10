@@ -61,22 +61,34 @@
     UITableViewDelegate
 >
 @property (nonatomic, strong) HXTableViewPropertyInterceptor *delegateInterceptor;
+
+@property (nonatomic, strong) id<UITableViewDelegate> innerDelegate;
+
+@property (nonatomic, strong) id<UITableViewDataSource> innerDatasource;
+
 @property (nonatomic, strong) HXTableViewPropertyInterceptor *datasourceInterceptor;
 @end
 
 @implementation HXConvenientTableView
 #pragma mark - Life Cycle
+- (instancetype)initWithFrame:(CGRect)frame style:(UITableViewStyle)style {
+    if (self = [super initWithFrame:frame style:style]) {
+        self.innerDelegate = (id<UITableViewDelegate>)[NSObject new];
+        self.innerDatasource = (id<UITableViewDataSource>)[NSObject new];
+        self.dataSource = self.innerDatasource;
+        self.delegate   = self.innerDelegate;
+    }
+    return self;
+}
 
 #pragma mark - System Method
 - (void)setDataSource:(id<UITableViewDataSource>)dataSource {
     self.datasourceInterceptor.originalReceiver = dataSource;
-    HXLog(@"-------------------set datasource");
     [super setDataSource:(id<UITableViewDataSource>)self.datasourceInterceptor];
 }
 
 - (void)setDelegate:(id<UITableViewDelegate>)delegate {
     self.delegateInterceptor.originalReceiver = delegate;
-    HXLog(@"-------------------set delegate");
     [super setDelegate:(id<UITableViewDelegate>)self.delegateInterceptor];
 }
 
@@ -182,7 +194,7 @@
     if (height <= 0 && self.sectionHeaderHeight > 0) {
         return self.sectionHeaderHeight;
     }
-    return MAX(height, 0.1);
+    return MAX(height, 0.01);
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
@@ -192,7 +204,7 @@
     if (height <= 0 && self.sectionFooterHeight > 0) {
         return self.sectionFooterHeight;
     }
-    return MAX(height, 0.1);
+    return MAX(height, 0.01);
 }
 
 #pragma mark - Setter And Getter

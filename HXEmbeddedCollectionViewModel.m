@@ -19,6 +19,7 @@
         self.minimumInteritemSpacing = 0;
         self.minimumLineSpacing = 0;
         self.customLayoutClass = [UICollectionViewFlowLayout class];
+        self.contentInset = UIEdgeInsetsZero;
     }
     return self;
 }

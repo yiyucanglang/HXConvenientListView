@@ -9,7 +9,21 @@
 #import "NSObject+HXListConvenient.h"
 
 @implementation NSObject (HXListConvenient)
+
+- (BOOL)nibFileExitWihtNibName:(NSString *)nibName {
+    NSString *nibPath = [[NSBundle mainBundle] pathForResource:nibName ofType:@"nib"];
+    if (nibPath.length) {
+        return YES;
+    }
+    return NO;
+}
+
 - (UIView *)hx_createViewWithNibName:(NSString *)nibName {
+    
+    if (![self nibFileExitWihtNibName:nibName]) {
+        return nil;
+    }
+    
     UIView *view;
     @try {
         view = [[[NSBundle mainBundle] loadNibNamed:nibName owner:nil options:nil] firstObject];
@@ -69,6 +83,8 @@
     UITableViewCell *cell = [self dequeueReusableCellWithIdentifier:[self hx_identifierWithModel:model]];
     if (!cell) {
         cell = [((UITableViewCell *)[containerCellClass alloc]) initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[self hx_identifierWithModel:model]];
+        cell.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+        
     }
     cell.selectionStyle = model.cellSelectionStyle;
     UIView *content = [cell.contentView viewWithTag:95278888];
@@ -241,14 +257,6 @@
 }
 
 #pragma mark -Private
-- (BOOL)nibFileExitWihtNibName:(NSString *)nibName {
-    NSString *nibPath = [[NSBundle mainBundle] pathForResource:nibName ofType:@"nib"];
-    if (nibPath.length) {
-        return YES;
-    }
-    return NO;
-}
-
 - (void)registerCellWithModel:(id<HXConvenientViewModelProtocol>)model
                containerCellClass:(Class)containerCellClass {
     

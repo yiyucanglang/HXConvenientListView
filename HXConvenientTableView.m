@@ -62,24 +62,11 @@
 >
 @property (nonatomic, strong) HXTableViewPropertyInterceptor *delegateInterceptor;
 
-@property (nonatomic, strong) id<UITableViewDelegate> innerDelegate;
-
-@property (nonatomic, strong) id<UITableViewDataSource> innerDatasource;
-
 @property (nonatomic, strong) HXTableViewPropertyInterceptor *datasourceInterceptor;
 @end
 
 @implementation HXConvenientTableView
 #pragma mark - Life Cycle
-- (instancetype)initWithFrame:(CGRect)frame style:(UITableViewStyle)style {
-    if (self = [super initWithFrame:frame style:style]) {
-        self.innerDelegate = (id<UITableViewDelegate>)[NSObject new];
-        self.innerDatasource = (id<UITableViewDataSource>)[NSObject new];
-        self.dataSource = self.innerDatasource;
-        self.delegate   = self.innerDelegate;
-    }
-    return self;
-}
 
 #pragma mark - System Method
 - (void)setDataSource:(id<UITableViewDataSource>)dataSource {

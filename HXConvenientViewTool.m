@@ -27,13 +27,13 @@ static NSMutableDictionary  *customMethodDic;
 
 #pragma mark - Public Method
 + (HXBaseConvenientViewModel *)seperatorModel {
-    return [self seperatorModelWithColor:defaultSeperatorColor height:20 viewClassName:@"HXBaseSeperatorView"];
+    return [self seperatorModelWithColor:defaultSeperatorColor height:10];
 }
 
-+ (HXBaseConvenientViewModel *)seperatorModelWithColor:(UIColor *)seperatorColor height:(CGFloat)height viewClassName:(nonnull NSString *)viewClassName{
++ (HXBaseConvenientViewModel *)seperatorModelWithColor:(UIColor *)seperatorColor height:(CGFloat)height {
     HXBaseConvenientViewModel *model = [HXBaseConvenientViewModel model];
     model.userInfo = @{hxBackgroundColorKey : seperatorColor?:defaultSeperatorColor};
-    model.viewClassName = viewClassName;
+    model.viewClassName = @"HXBaseSeperatorView";
     model.viewHeight    = height;
     return model;
 }
@@ -42,6 +42,14 @@ static NSMutableDictionary  *customMethodDic;
     if (seperatorColor) {
         defaultSeperatorColor = seperatorColor;
     }
+}
+
++ (HXBaseConvenientViewModel *)convenientModelWithUserInfo:(NSDictionary *)userInfo height:(CGFloat)height viewClassName:(NSString *)viewClassName {
+    HXBaseConvenientViewModel *model = [HXBaseConvenientViewModel model];
+    model.userInfo   = userInfo;
+    model.viewHeight = height;
+    model.viewClassName = viewClassName;
+    return model;
 }
 
 + (void)configCustomMethodDic:(NSDictionary *)dic delegate:(id)delegate viewClassName:(NSString *)viewClassName {

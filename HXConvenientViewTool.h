@@ -12,13 +12,16 @@ NS_ASSUME_NONNULL_BEGIN
 @class HXBaseConvenientViewModel;
 @interface HXConvenientViewTool : NSObject
 
-//color = defaultSeperatorColor;hegight = 20;view:HXBaseSeperatorView
+//color = defaultSeperatorColor;hegight = 10;view:HXBaseSeperatorView
 + (HXBaseConvenientViewModel *)seperatorModel;
 
-+ (HXBaseConvenientViewModel *)seperatorModelWithColor:(UIColor *)seperatorColor height:(CGFloat)height viewClassName:(NSString *)viewClassName;
++ (HXBaseConvenientViewModel *)seperatorModelWithColor:(UIColor *)seperatorColor height:(CGFloat)height;
 
 //you should call this at the app launch default:rgba(244,245,247,1)
 + (void)setDefaultSeperatorColor:(UIColor *)seperatorColor;
+
+
++ (HXBaseConvenientViewModel *)convenientModelWithUserInfo:(nullable NSDictionary *)userInfo height:(CGFloat)height viewClassName:(NSString *)viewClassName;
 
 
 //config  customHandleMethod in view's delegate

@@ -99,7 +99,10 @@
         }];
         content.tag   = 95278888;
     }
-    model.containerTableViewCell = cell;
+    if ([content respondsToSelector:@selector(setContainerTableViewCell:)]) {
+        ((id<HXConvenientViewProtocol>)content).containerTableViewCell = cell;
+    }
+    
     [((id<HXConvenientViewProtocol>)content) bindingModel:model];
     return cell;
 }
@@ -208,7 +211,9 @@
         }];
         content.tag   = 95278888;
     }
-    model.containerCollectionViewCell = cell;
+    if ([content respondsToSelector:@selector(setContainerCollectionViewCell:)]) {
+        ((id<HXConvenientViewProtocol>)content).containerCollectionViewCell = cell;
+    }
     [((id<HXConvenientViewProtocol>)content) bindingModel:model];
     return cell;
 }

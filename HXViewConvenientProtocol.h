@@ -46,6 +46,10 @@ static NSString * const hxTimeKey    = @"TimeKey";
 
 - (void)setAvailableModelHeight;
 
+@property (nonatomic, weak) UITableViewCell *containerTableViewCell;
+
+@property (nonatomic, weak) UICollectionViewCell *containerCollectionViewCell;
+
 @end
 
 
@@ -79,12 +83,8 @@ static NSString * const hxTimeKey    = @"TimeKey";
 @property (nonatomic, assign) NSInteger       section;
 @property (nonatomic, weak) UITableView      *tableView;
 
-@property (nonatomic, weak) UITableViewCell *containerTableViewCell;
-
 //for UICollectionView
 @property (nonatomic, weak) UICollectionView      *collectionView;
-
-@property (nonatomic, weak) UICollectionViewCell *containerCollectionViewCell;
 
 + (instancetype)model;
 

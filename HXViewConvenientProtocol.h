@@ -58,6 +58,7 @@ static NSString * const hxTimeKey    = @"TimeKey";
 @property (nonatomic, assign) BOOL forbiddenCustomTap;
 @property (nonatomic, strong) NSDictionary *userInfo;
 
+
 @optional
 
 /**
@@ -72,12 +73,19 @@ static NSString * const hxTimeKey    = @"TimeKey";
 //default:viewClassName
 @property (nonatomic, copy) NSString *identifier;
 
-//for TableView
+//for UITableView
 @property (nonatomic, assign) UITableViewCellSelectionStyle cellSelectionStyle;
 @property (nonatomic, strong) NSIndexPath    *indexPath;
 @property (nonatomic, assign) NSInteger       section;
 @property (nonatomic, weak) UITableView      *tableView;
+
+@property (nonatomic, weak) UITableViewCell *containerTableViewCell;
+
+//for UICollectionView
 @property (nonatomic, weak) UICollectionView      *collectionView;
+
+@property (nonatomic, weak) UICollectionViewCell *containerCollectionViewCell;
+
 + (instancetype)model;
 
 - (void)autoCalculateHeight;

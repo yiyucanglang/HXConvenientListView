@@ -99,6 +99,7 @@
         }];
         content.tag   = 95278888;
     }
+    model.containerTableViewCell = cell;
     [((id<HXConvenientViewProtocol>)content) bindingModel:model];
     return cell;
 }
@@ -207,6 +208,7 @@
         }];
         content.tag   = 95278888;
     }
+    model.containerCollectionViewCell = cell;
     [((id<HXConvenientViewProtocol>)content) bindingModel:model];
     return cell;
 }

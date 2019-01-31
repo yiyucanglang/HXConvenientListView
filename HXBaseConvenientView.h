@@ -11,13 +11,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-//customSwitchMthod = [NSString stringWithFormat:@"handleActionIn%@WithModel:view:", NSStringFromClass([self class])];
+//customSwitchMethod = [NSString stringWithFormat:@"handleActionIn%@WithModel:view:", NSStringFromClass([self class])];
 
 /*
- Atention:触发delegate方法顺序说明 假设下面call的方法delegate都已实现
+ Attention:触发delegate方法顺序说明 假设下面call的方法delegate都已实现
  
  call  data.model.delegateHandleMethodStr
- call  customSwitchMthod
+ call  customSwitchMethod
  call  <HXConvenientViewDelegate>
  
 */

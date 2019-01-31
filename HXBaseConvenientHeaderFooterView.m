@@ -46,26 +46,33 @@
 }
 
 - (void)updateActionType:(NSInteger)actionType {
+    [self updateActionType:actionType userInfo:nil];
+}
+
+- (void)updateActionType:(NSInteger)actionType userInfo:(NSDictionary *)userInfo {
+    
     self.dataModel.actionType = actionType;
     if (!self.dataModel.delegate) {
         self.dataModel.delegate = self.delegate;
     }
-    [self notiDelegate];
+    [self notiDelegateWithUserInfo:userInfo];
 }
 
 - (void)setAvailableModelHeight {
 }
 
 #pragma mark - Private Method
+
 - (void)tapClick:(UITapGestureRecognizer *)tap {
     [self updateActionType:0];
 }
 
-- (void)notiDelegate {
+- (void)notiDelegateWithUserInfo:(NSDictionary *)userInfo {
+    
     SEL sel = NSSelectorFromString(self.dataModel.delegateHandleMethodStr);
     if ([self.delegate respondsToSelector:sel]) {
         
-        [self callTarget:self.delegate sel:sel model:self.dataModel view:self];
+        [self callTarget:self.delegate sel:sel model:self.dataModel view:self userInfo:userInfo];
         return;
         
     }
@@ -74,29 +81,37 @@
     sel = NSSelectorFromString(customSwitchMethodStr);
     if ([self.delegate respondsToSelector:sel]) {
         
-        [self callTarget:self.delegate sel:sel model:self.dataModel view:self];
+        [self callTarget:self.delegate sel:sel model:self.dataModel view:self userInfo:nil];
         return;
         
     }
     
+    
+    
     if ([self.delegate respondsToSelector:@selector(handleActionInView:model:)]) {
         [self.delegate handleActionInView:self model:self.dataModel];
     }
+    
 }
 
 #pragma mark tool
-- (void)callTarget:(id)target sel:(SEL)sel model:(id)model view:(UIView *)view {
+- (void)callTarget:(id)target sel:(SEL)sel model:(id)model view:(UIView *)view userInfo:(NSDictionary *)userInfo {
+    
     NSMethodSignature *signature = [[target class] instanceMethodSignatureForSelector:sel];
-    if (signature.numberOfArguments != 4) {
-        NSString *errorDes = [NSString stringWithFormat:@"%@代理对象自定义代理方法参数设置错误", NSStringFromClass([self class])];
-        NSAssert(0, errorDes);
-    }
+    
     
     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
     [invocation setTarget:target];
+    
     [invocation setSelector:sel];
-    [invocation setArgument:&model atIndex:2];
-    [invocation setArgument:&view atIndex:3];
+    if (signature.numberOfArguments == 4) {
+        [invocation setArgument:&model atIndex:2];
+        [invocation setArgument:&view atIndex:3];
+    }
+    else if (signature.numberOfArguments == 3) {
+        [invocation setArgument:&userInfo atIndex:2];
+    }
+    
     [invocation invoke];
 }
 

@@ -42,6 +42,8 @@ static NSString * const hxTimeKey    = @"TimeKey";
 
 - (void)updateActionType:(NSInteger)actionType;
 
+- (void)updateActionType:(NSInteger)actionType userInfo:(NSDictionary *)userInfo;
+
 @optional
 
 - (void)setAvailableModelHeight;

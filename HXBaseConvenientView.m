@@ -58,7 +58,24 @@
         if ([self.delegate respondsToSelector:sel]) {
             
             [self callTarget:self.delegate sel:sel model:self.dataModel view:self userInfo:userInfo];
+            return;
+        }
+        //default call
+        NSString *defaultHandleStr = [NSString stringWithFormat:@"handle%@Action:userInfo:", NSStringFromClass([self class])];
+        SEL defaultHandle = NSSelectorFromString(defaultHandleStr);
+        if ([self.delegate respondsToSelector:defaultHandle]) {
             
+            
+            NSMethodSignature *signature = [[self.delegate class] instanceMethodSignatureForSelector:defaultHandle];
+            
+            
+            NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+            [invocation setTarget:self.delegate];
+            
+            [invocation setSelector:defaultHandle];
+            [invocation setArgument:&actionType atIndex:2];
+            [invocation setArgument:&userInfo atIndex:3];
+            [invocation invoke];
         }
         return;
     }

@@ -68,6 +68,11 @@
         }];
     }
     
+    if (dataModel.outerHighPriorityGestureRecognizerRelativeToCollectionViewPanGes) {
+        [self.collectionView.panGestureRecognizer requireGestureRecognizerToFail:dataModel.outerHighPriorityGestureRecognizerRelativeToCollectionViewPanGes];
+    }
+    
+    
     UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
     layout.scrollDirection         = dataModel.scrollDirection;
     layout.minimumLineSpacing      = dataModel.minimumLineSpacing;

@@ -11,10 +11,9 @@
 #import "HXConvenientViewTool.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HXBaseConvenientViewModel : NSObject<HXConvenientViewModelProtocol>
+@interface HXBaseConvenientViewModel < T > : NSObject<HXConvenientViewModelProtocol>
 
-#pragma mark seperator
-
+@property (nonatomic, strong) T customData;
 @end
 
 NS_ASSUME_NONNULL_END

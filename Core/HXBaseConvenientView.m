@@ -13,6 +13,11 @@
 @synthesize delegate  = _delegate;
 @synthesize tap       = _tap;
 @synthesize dataModel = _dataModel;
+@synthesize containerTableViewCell = _containerTableViewCell;
+@synthesize containerCollectionViewCell = _containerCollectionViewCell;
+@synthesize containerHeaderFooterView = _containerHeaderFooterView;
+@synthesize containerCollectionReusableView = _containerCollectionReusableView;
+
 #pragma mark - Life Cycle
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
@@ -47,16 +52,16 @@
 }
 
 - (void)updateActionType:(NSInteger)actionType userInfo:(NSDictionary *)userInfo {
-    
+
     self.dataModel.actionType = actionType;
     if (!self.dataModel.delegate) {
         self.dataModel.delegate = self.delegate;
     }
-    
+
     if (!self.dataModel) {//无model情况下
         SEL sel = NSSelectorFromString([[HXConvenientViewTool customMethodDicWithViewClassName:NSStringFromClass([self class]) delegate:self.delegate] objectForKey:@(actionType)]);
         if ([self.delegate respondsToSelector:sel]) {
-            
+
             [self callTarget:self.delegate sel:sel model:self.dataModel view:self userInfo:userInfo];
             return;
         }
@@ -64,14 +69,14 @@
         NSString *defaultHandleStr = [NSString stringWithFormat:@"handle%@Action:userInfo:", NSStringFromClass([self class])];
         SEL defaultHandle = NSSelectorFromString(defaultHandleStr);
         if ([self.delegate respondsToSelector:defaultHandle]) {
-            
-            
+
+
             NSMethodSignature *signature = [[self.delegate class] instanceMethodSignatureForSelector:defaultHandle];
-            
-            
+
+
             NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
             [invocation setTarget:self.delegate];
-            
+
             [invocation setSelector:defaultHandle];
             [invocation setArgument:&actionType atIndex:2];
             [invocation setArgument:&userInfo atIndex:3];
@@ -79,7 +84,7 @@
         }
         return;
     }
-    
+
     [self notiDelegateWithUserInfo:userInfo];
 }
 
@@ -93,41 +98,41 @@
 }
 
 - (void)notiDelegateWithUserInfo:(NSDictionary *)userInfo {
-    
+
     SEL sel = NSSelectorFromString(self.dataModel.delegateHandleMethodStr);
     if ([self.delegate respondsToSelector:sel]) {
-        
+
         [self callTarget:self.delegate sel:sel model:self.dataModel view:self userInfo:userInfo];
         return;
-        
+
     }
-    
+
     NSString *customSwitchMethodStr = [NSString stringWithFormat:@"handleActionIn%@WithModel:view:", NSStringFromClass([self class])];
     sel = NSSelectorFromString(customSwitchMethodStr);
     if ([self.delegate respondsToSelector:sel]) {
-        
+
         [self callTarget:self.delegate sel:sel model:self.dataModel view:self userInfo:nil];
         return;
-        
+
     }
-    
-    
-    
+
+
+
     if ([self.delegate respondsToSelector:@selector(handleActionInView:model:)]) {
         [self.delegate handleActionInView:self model:self.dataModel];
     }
-    
+
 }
 
 #pragma mark tool
 - (void)callTarget:(id)target sel:(SEL)sel model:(id)model view:(UIView *)view userInfo:(NSDictionary *)userInfo {
-    
+
     NSMethodSignature *signature = [[target class] instanceMethodSignatureForSelector:sel];
-    
-    
+
+
     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
     [invocation setTarget:target];
-    
+
     [invocation setSelector:sel];
     if (signature.numberOfArguments == 4) {
         [invocation setArgument:&model atIndex:2];
@@ -136,7 +141,7 @@
     else if (signature.numberOfArguments == 3) {
         [invocation setArgument:&userInfo atIndex:2];
     }
-    
+
     [invocation invoke];
 }
 
@@ -170,3 +175,4 @@
 #pragma mark - Dealloc
 
 @end
+

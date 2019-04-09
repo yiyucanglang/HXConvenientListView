@@ -153,6 +153,11 @@
         }];
         content.tag   = 95278888;
     }
+    
+    if ([content respondsToSelector:@selector(setContainerHeaderFooterView:)]) {
+        ((id<HXConvenientViewProtocol>)content).containerHeaderFooterView = view;
+    }
+    
     [((id<HXConvenientViewProtocol>)content) bindingModel:model];
     return view;
 }
@@ -259,6 +264,11 @@
         }];
         content.tag   = 95278888;
     }
+    
+    if ([content respondsToSelector:@selector(setContainerCollectionReusableView:)]) {
+        ((id<HXConvenientViewProtocol>)content).containerCollectionReusableView = cell;
+    }
+    
     [((id<HXConvenientViewProtocol>)content) bindingModel:model];
     return cell;
 }

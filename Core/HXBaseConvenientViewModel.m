@@ -18,13 +18,14 @@
 @synthesize viewWidth  = _viewWidth;
 
 @synthesize delegateHandleMethodStr   = _delegateHandleMethodStr;
-@synthesize associateObject = _associateObject;
+@synthesize associatedObject = _associatedObject;
 @synthesize identifier = _identifier;
 @synthesize cellSelectionStyle  = _cellSelectionStyle;
 @synthesize indexPath   = _indexPath;
 @synthesize section     = _section;
 @synthesize tableView   = _tableView;
 @synthesize collectionView   = _collectionView;
+@synthesize customData    = customData;
 
 #pragma mark - Life Cycle
 - (instancetype)init {

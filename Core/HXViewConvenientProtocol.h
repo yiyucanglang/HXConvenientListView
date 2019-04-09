@@ -52,6 +52,10 @@ static NSString * const hxTimeKey    = @"TimeKey";
 
 @property (nonatomic, weak) UICollectionViewCell *containerCollectionViewCell;
 
+@property (nonatomic, weak) UITableViewHeaderFooterView *containerHeaderFooterView;
+
+@property (nonatomic, weak) UICollectionReusableView     *containerCollectionReusableView;
+
 @end
 
 
@@ -74,7 +78,7 @@ static NSString * const hxTimeKey    = @"TimeKey";
 @property (nonatomic, copy) NSString     *delegateHandleMethodStr;
 
 //for expand
-@property (nonatomic, weak) id                associateObject;
+@property (nonatomic, weak) id                associatedObject;
 
 //default:viewClassName
 @property (nonatomic, copy) NSString *identifier;

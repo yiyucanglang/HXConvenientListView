@@ -76,6 +76,9 @@
         
         ((UITableViewCell *)cell).selectionStyle = model.cellSelectionStyle;
         
+        if ([model respondsToSelector:@selector(setAssociatedView:)]) {
+            model.associatedView = cell;
+        }
         [cell bindingModel:model];
         return (UITableViewCell *)cell;
     }
@@ -101,6 +104,10 @@
     }
     if ([content respondsToSelector:@selector(setContainerTableViewCell:)]) {
         ((id<HXConvenientViewProtocol>)content).containerTableViewCell = cell;
+    }
+    
+    if ([model respondsToSelector:@selector(setAssociatedView:)]) {
+        model.associatedView = content;
     }
     
     [((id<HXConvenientViewProtocol>)content) bindingModel:model];
@@ -133,6 +140,11 @@
         }
         model.tableView = self;
         model.section = section;
+        
+        if ([model respondsToSelector:@selector(setAssociatedView:)]) {
+            model.associatedView = view;
+        }
+        
         [view bindingModel:model];
         return (UITableViewHeaderFooterView *)view;
     }
@@ -156,6 +168,10 @@
     
     if ([content respondsToSelector:@selector(setContainerHeaderFooterView:)]) {
         ((id<HXConvenientViewProtocol>)content).containerHeaderFooterView = view;
+    }
+    
+    if ([model respondsToSelector:@selector(setAssociatedView:)]) {
+        model.associatedView = content;
     }
     
     [((id<HXConvenientViewProtocol>)content) bindingModel:model];
@@ -198,6 +214,10 @@
     
     if ([viewClass isSubclassOfClass:[UICollectionViewCell class]]) {
         
+        if ([model respondsToSelector:@selector(setAssociatedView:)]) {
+            model.associatedView = cell;
+        }
+        
         [cell bindingModel:model];
         return (UICollectionViewCell *)cell;
     }
@@ -219,6 +239,11 @@
     if ([content respondsToSelector:@selector(setContainerCollectionViewCell:)]) {
         ((id<HXConvenientViewProtocol>)content).containerCollectionViewCell = cell;
     }
+    
+    if ([model respondsToSelector:@selector(setAssociatedView:)]) {
+        model.associatedView = content;
+    }
+    
     [((id<HXConvenientViewProtocol>)content) bindingModel:model];
     return cell;
 }
@@ -247,6 +272,11 @@
     
     if ([viewClass isSubclassOfClass:[UICollectionReusableView class]]) {
         
+        
+        if ([model respondsToSelector:@selector(setAssociatedView:)]) {
+            model.associatedView = cell;
+        }
+        
         [cell bindingModel:model];
         return cell;
     }
@@ -267,6 +297,10 @@
     
     if ([content respondsToSelector:@selector(setContainerCollectionReusableView:)]) {
         ((id<HXConvenientViewProtocol>)content).containerCollectionReusableView = cell;
+    }
+    
+    if ([model respondsToSelector:@selector(setAssociatedView:)]) {
+        model.associatedView = content;
     }
     
     [((id<HXConvenientViewProtocol>)content) bindingModel:model];

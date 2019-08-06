@@ -92,6 +92,8 @@ static NSString * const hxTimeKey    = @"TimeKey";
 //for UICollectionView
 @property (nonatomic, weak) UICollectionView      *collectionView;
 
+@property (nonatomic, weak) UIView                *associatedView;//uiew or cell
+
 + (instancetype)model;
 
 - (void)autoCalculateHeight;
@@ -104,7 +106,13 @@ static NSString * const hxTimeKey    = @"TimeKey";
 
 @property (nonatomic, strong) NSMutableArray<id<HXConvenientViewModelProtocol >> *rowsArr;
 
+@optional
 @property (nonatomic, assign) NSInteger       section;
+
+@property (nonatomic, weak) UITableView      *tableView;
+
+//for UICollectionView
+@property (nonatomic, weak) UICollectionView      *collectionView;
 
 + (instancetype)model;
 

@@ -9,10 +9,12 @@
 #import "HXBaseConvenientMultiSectionModel.h"
 
 @implementation HXBaseConvenientMultiSectionModel
-@synthesize headModel = _headModel;
-@synthesize footModel = _footModel;
-@synthesize rowsArr   = _rowsArr;
-@synthesize section   = _section;
+@synthesize headModel        = _headModel;
+@synthesize footModel        = _footModel;
+@synthesize rowsArr          = _rowsArr;
+@synthesize section          = _section;
+@synthesize tableView        = _tableView;
+@synthesize collectionView   = _collectionView;
 #pragma mark - Life Cycle
 + (instancetype)model {
     return [[[self class] alloc] init];

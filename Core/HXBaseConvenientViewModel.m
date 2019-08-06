@@ -25,7 +25,8 @@
 @synthesize section     = _section;
 @synthesize tableView   = _tableView;
 @synthesize collectionView   = _collectionView;
-@synthesize customData    = customData;
+@synthesize customData    = _customData;
+@synthesize associatedView    = _associatedView;
 
 #pragma mark - Life Cycle
 - (instancetype)init {

@@ -121,7 +121,14 @@
 - (NSInteger)rowNumAtIndex:(NSInteger)index {
     if (self.multiSection) {
         id<HXConvenientTableViewMultiSectionsProtocol> model = self.sourceArr[index];
-        model.section = index;
+        if ([model respondsToSelector:@selector(setSection:)]) {
+            model.section = index;
+        }
+        if ([model respondsToSelector:@selector(setCollectionView:)]) {
+            model.collectionView = self;
+        }
+
+    
         return model.rowsArr.count;
     }
     return self.sourceArr.count;

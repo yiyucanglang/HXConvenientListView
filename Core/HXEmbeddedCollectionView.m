@@ -27,6 +27,9 @@
     if (self.frame.size.width == self.dataModel.tableView.frame.size.width) {
         [self.collectionView reloadData];
     }
+    else if(self.frame.size.width == self.dataModel.collectionView.frame.size.width) {
+        [self.collectionView reloadData];
+    }
     [super layoutSubviews];
     
 }
@@ -42,6 +45,9 @@
     self.collectionView.sourceArr = dataModel.sourceArray;
     
     if (self.frame.size.width == self.dataModel.tableView.frame.size.width) {
+        [self.collectionView reloadData];
+    }
+    else if(self.frame.size.width == self.dataModel.collectionView.frame.size.width) {
         [self.collectionView reloadData];
     }
 

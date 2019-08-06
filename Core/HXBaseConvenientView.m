@@ -18,6 +18,7 @@
 @synthesize containerHeaderFooterView = _containerHeaderFooterView;
 @synthesize containerCollectionReusableView = _containerCollectionReusableView;
 
+
 #pragma mark - Life Cycle
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {

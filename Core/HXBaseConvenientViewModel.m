@@ -45,12 +45,17 @@
 
 - (void)autoCalculateHeight {
     
+    [self autoCalculateHeightWithSpecificFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
+}
+
+- (void)autoCalculateHeightWithSpecificFrame:(CGRect)frame {
+    
     self.viewHeight = 0;
     
     static id<HXConvenientViewProtocol> view;
     Class class = NSClassFromString(self.viewClassName);
     if (!view || ![view isKindOfClass:class]) {
-        view = [[NSClassFromString(self.viewClassName) alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
+        view = [[NSClassFromString(self.viewClassName) alloc] initWithFrame:frame];
     }
     [view bindingModel:self];
 }
@@ -62,8 +67,10 @@
 #pragma mark - Setter And Getter
 
 - (NSString *)delegateHandleMethodStr {
-    
-   return   [[HXConvenientViewTool customMethodDicWithViewClassName:self.viewClassName delegate:self.delegate] objectForKey:@(self.actionType)];
+    if (_delegateHandleMethodStr.length) {
+        return _delegateHandleMethodStr;
+    }
+    return   [[HXConvenientViewTool customMethodDicWithViewClassName:self.viewClassName delegate:self.delegate] objectForKey:@(self.actionType)];
 }
 
 #pragma mark - Dealloc

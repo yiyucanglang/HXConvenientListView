@@ -97,6 +97,8 @@ static NSString * const hxTimeKey    = @"TimeKey";
 + (instancetype)model;
 
 - (void)autoCalculateHeight;
+
+- (void)autoCalculateHeightWithSpecificFrame:(CGRect)frame;
 @end
 
 @protocol HXConvenientTableViewMultiSectionsProtocol <NSObject>

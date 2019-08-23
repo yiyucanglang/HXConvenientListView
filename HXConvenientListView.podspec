@@ -8,6 +8,8 @@ Pod::Spec.new do |s|
   s.author           = { 'dahuanxiong' => 'xinlixuezyj@163.com' }
   s.source           = { :git => 'https://github.com/yiyucanglang/HXConvenientListView.git', :tag => s.version }
 
+  s.requires_arc = true
+
   s.static_framework = true
   s.ios.deployment_target = '8.0'
 

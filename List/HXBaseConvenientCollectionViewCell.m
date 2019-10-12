@@ -12,7 +12,7 @@
 @synthesize delegate  = _delegate;
 @synthesize tap       = _tap;
 @synthesize dataModel = _dataModel;
-
+@synthesize viewIdentifier = _viewIdentifier;
 #pragma mark - Life Cycle
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
@@ -75,7 +75,7 @@
         
     }
     
-    NSString *customSwitchMethodStr = [NSString stringWithFormat:@"handleActionIn%@WithModel:view:", NSStringFromClass([self class])];
+    NSString *customSwitchMethodStr = [NSString stringWithFormat:@"handleActionIn%@WithModel:view:", self.viewIdentifier];
     sel = NSSelectorFromString(customSwitchMethodStr);
     if ([self.delegate respondsToSelector:sel]) {
         
@@ -141,6 +141,12 @@
     return _delegate;
 }
 
+- (NSString *)viewIdentifier {
+    if (!_viewIdentifier) {
+        _viewIdentifier = NSStringFromClass([self class]);
+    }
+    return _viewIdentifier;
+}
 #pragma mark - Dealloc
 
 @end

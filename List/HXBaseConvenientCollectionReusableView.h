@@ -22,6 +22,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HXBaseConvenientCollectionReusableView : UICollectionReusableView<HXConvenientViewProtocol>
+
+@property (nonatomic, strong) NSString     *viewIdentifier;
+
 //must call super in the end
 - (void)bindingModel:(id<HXConvenientViewModelProtocol>)dataModel;
 @end

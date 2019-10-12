@@ -17,7 +17,7 @@
 @synthesize containerCollectionViewCell = _containerCollectionViewCell;
 @synthesize containerHeaderFooterView = _containerHeaderFooterView;
 @synthesize containerCollectionReusableView = _containerCollectionReusableView;
-
+@synthesize viewIdentifier = _viewIdentifier;
 
 #pragma mark - Life Cycle
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -60,7 +60,7 @@
     }
 
     if (!self.dataModel) {//无model情况下
-        SEL sel = NSSelectorFromString([[HXConvenientViewTool customMethodDicWithViewClassName:NSStringFromClass([self class]) delegate:self.delegate] objectForKey:@(actionType)]);
+        SEL sel = NSSelectorFromString([[HXConvenientViewTool customMethodDicWithViewClassName:self.viewIdentifier delegate:self.delegate] objectForKey:@(actionType)]);
         if ([self.delegate respondsToSelector:sel]) {
 
             [self callTarget:self.delegate sel:sel model:self.dataModel view:self userInfo:userInfo];
@@ -69,13 +69,13 @@
         
         BOOL canRespond = NO;
         //default call
-        NSString *defaultHandleStr = [NSString stringWithFormat:@"handle%@Action:userInfo:", NSStringFromClass([self class])];
+        NSString *defaultHandleStr = [NSString stringWithFormat:@"handle%@Action:userInfo:", self.viewIdentifier];
         SEL defaultHandle = NSSelectorFromString(defaultHandleStr);
         if ([self.delegate respondsToSelector:defaultHandle]) {
             canRespond = YES;
         }
         
-        NSString *secondDefaultHandleStr = [NSString stringWithFormat:@"handle%@Action:userInfo:view:", NSStringFromClass([self class])];
+        NSString *secondDefaultHandleStr = [NSString stringWithFormat:@"handle%@Action:userInfo:view:", self.viewIdentifier];
         if ([self.delegate respondsToSelector:NSSelectorFromString(secondDefaultHandleStr)]) {
             defaultHandle = NSSelectorFromString(secondDefaultHandleStr);
             canRespond = YES;
@@ -108,6 +108,7 @@
 - (void)setAvailableModelHeight {
 }
 
+
 #pragma mark - Private Method
 
 - (void)tapClick:(UITapGestureRecognizer *)tap {
@@ -124,7 +125,7 @@
 
     }
 
-    NSString *customSwitchMethodStr = [NSString stringWithFormat:@"handleActionIn%@WithModel:view:", NSStringFromClass([self class])];
+    NSString *customSwitchMethodStr = [NSString stringWithFormat:@"handleActionIn%@WithModel:view:", self.viewIdentifier];
     sel = NSSelectorFromString(customSwitchMethodStr);
     if ([self.delegate respondsToSelector:sel]) {
 
@@ -187,6 +188,13 @@
         _delegate = (id<HXConvenientViewDelegate>)self.hx_ViewController;
     }
     return _delegate;
+}
+
+- (NSString *)viewIdentifier {
+    if (!_viewIdentifier) {
+        _viewIdentifier = NSStringFromClass([self class]);
+    }
+    return _viewIdentifier;
 }
 
 #pragma mark - Dealloc

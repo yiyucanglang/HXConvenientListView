@@ -26,7 +26,11 @@ static NSString * const hxImageKey   = @"ImageKey";
 static NSString * const hxTitleKey   = @"TitleKey";
 static NSString * const hxNameKey    = @"NameKey";
 static NSString * const hxContentKey = @"ContentKey";
+static NSString * const hxNoteKey    = @"NoteKey";
 static NSString * const hxTimeKey    = @"TimeKey";
+static NSString * const hxURLKey     = @"URLKey";
+static NSString * const hxFileKey    = @"FileKey";
+static NSString * const hxCustomKey  = @"CustomKey";
 
 @protocol HXConvenientViewModelProtocol;
 @protocol HXConvenientViewDelegate;
@@ -35,6 +39,7 @@ static NSString * const hxTimeKey    = @"TimeKey";
 @property (nonatomic, strong, readonly) id<HXConvenientViewModelProtocol> dataModel;
 @property (nonatomic, weak) id<HXConvenientViewDelegate> delegate;
 @property (nonatomic, strong) UITapGestureRecognizer *tap;
+
 
 - (void)UIConfig;
 
@@ -55,6 +60,11 @@ static NSString * const hxTimeKey    = @"TimeKey";
 @property (nonatomic, weak) UITableViewHeaderFooterView *containerHeaderFooterView;
 
 @property (nonatomic, weak) UICollectionReusableView     *containerCollectionReusableView;
+
+/**
+ default: NSStringFromClass([self class])
+ */
+@property (nonatomic, strong) NSString     *viewIdentifier;
 
 @end
 

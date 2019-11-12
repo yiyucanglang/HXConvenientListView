@@ -101,64 +101,30 @@
     [super setEstimatedRowHeight:estimatedRowHeight];
 }
 
-//- (void)removeFromSuperview {
-//    [self clearDelegate];
-//    [super removeFromSuperview];
-//}
-
 #pragma mark - Public Method
 - (void)reloadData {
-    HXLog(@"---------------call reloaddata");
     [super reloadData];
 }
 
 #pragma mark - Private Method
-- (void)clearDelegate {
-    self.delegateInterceptor = nil;
-    self.datasourceInterceptor   = nil;
-}
-
-- (BOOL)multiSection {
-    if (self.sourceArr.count && [self.sourceArr[0] conformsToProtocol:@protocol(HXConvenientTableViewMultiSectionsProtocol)]) {
-        return YES;
-    }
-    return NO;
-}
 
 #pragma mark Assist Method
-- (NSInteger)sectionNum {
-    if (self.multiSection) {
-        return self.sourceArr.count;
+- (id<HXConvenientViewModelProtocol>)_rowModelAtIndexPath:(NSIndexPath *)indexPath {
+    
+    id<HXConvenientTableViewMultiSectionsProtocol> model = self.sourceArr[indexPath.section];
+    if ([model conformsToProtocol:@protocol(HXConvenientTableViewMultiSectionsProtocol)]) {
+        return model.rowsArr[indexPath.row];
     }
-    return 1;
+    
+    return model;
 }
 
-- (NSInteger)rowNumAtIndex:(NSInteger)index {
-    if (self.multiSection) {
-        id<HXConvenientTableViewMultiSectionsProtocol> model = self.sourceArr[index];
-        if ([model respondsToSelector:@selector(setSection:)]) {
-            model.section = index;
-        }
-        if ([model respondsToSelector:@selector(setTableView:)]) {
-            model.tableView = self;
-        }
-        return model.rowsArr.count;
-    }
-    return self.sourceArr.count;
-}
-
-- (id<HXConvenientViewModelProtocol>)rowModelAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.multiSection) {
-        id<HXConvenientTableViewMultiSectionsProtocol> model = self.sourceArr[indexPath.section];
-        return  model.rowsArr[indexPath.row];
-    }
-    return self.sourceArr[indexPath.row];
-}
-
-- (id<HXConvenientViewModelProtocol>)sectionModelAtSection:(NSInteger)section head:(BOOL)head {
-    if (self.multiSection) {
+- (id<HXConvenientViewModelProtocol>)_sectionModelAtSection:(NSInteger)section head:(BOOL)head {
+    
+    id<HXConvenientTableViewMultiSectionsProtocol> model = self.sourceArr[section];
+    
+    if ([model conformsToProtocol:@protocol(HXConvenientTableViewMultiSectionsProtocol)]) {
         if (self.sourceArr.count > section) {
-            id<HXConvenientTableViewMultiSectionsProtocol> model = self.sourceArr[section];
             if (head) {
                 return model.headModel;
             }
@@ -173,32 +139,37 @@
 #pragma mark - Delegate
 #pragma UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    HXLog(@"------------------- numberOfSectionsInTableView");
-    return [self sectionNum];
+    return self.sourceArr.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    HXLog(@"------------------- numberOfRowsInSection");
-    return [self rowNumAtIndex:section];
+    
+    id<HXConvenientTableViewMultiSectionsProtocol> model = self.sourceArr[section];
+    
+    if ([model conformsToProtocol:@protocol(HXConvenientTableViewMultiSectionsProtocol)]) {
+        return model.rowsArr.count;
+    }
+    
+    return 1;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    HXLog(@"------------------- cellForRowAtIndexPath: section:%@ row:%@",@(indexPath.section), @(indexPath.row));
-    return [self hx_cellWithIndexPath:indexPath dataModel:[self rowModelAtIndexPath:indexPath] containerCellClass:self.cellContainerClass];
+    
+    return [self hx_cellWithIndexPath:indexPath dataModel:[self _rowModelAtIndexPath:indexPath] containerCellClass:self.cellContainerClass];
 }
 
 #pragma UITableViewDelegate
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    return [self hx_headerFooterViewWithSection:section model:[self sectionModelAtSection:section head:YES] containerHeaderFooterViewClass:self.headFooterContainerClass];
+    return [self hx_headerFooterViewWithSection:section model:[self _sectionModelAtSection:section head:YES] containerHeaderFooterViewClass:self.headFooterContainerClass];
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    return [self hx_headerFooterViewWithSection:section model:[self sectionModelAtSection:section head:NO] containerHeaderFooterViewClass:self.headFooterContainerClass];
+    return [self hx_headerFooterViewWithSection:section model:[self _sectionModelAtSection:section head:NO] containerHeaderFooterViewClass:self.headFooterContainerClass];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    CGFloat height = [self rowModelAtIndexPath:indexPath].viewHeight;
+    CGFloat height = [self _rowModelAtIndexPath:indexPath].viewHeight;
     HXLog(@"------rowheight:%@------------- height:%@", @(self.rowHeight), @(height));
     
     if (height <= 0) {
@@ -209,7 +180,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     
-    CGFloat height = [self sectionModelAtSection:section head:YES].viewHeight;
+    CGFloat height = [self _sectionModelAtSection:section head:YES].viewHeight;
     
     if (height <= 0 && self.sectionHeaderHeight > 0) {
         return self.sectionHeaderHeight;
@@ -219,7 +190,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     
-    CGFloat height = [self sectionModelAtSection:section head:NO].viewHeight;
+    CGFloat height = [self _sectionModelAtSection:section head:NO].viewHeight;
     
     if (height <= 0 && self.sectionFooterHeight > 0) {
         return self.sectionFooterHeight;

@@ -35,8 +35,9 @@ NS_ASSUME_NONNULL_BEGIN
 //default:UICollectionViewFlowLayout
 @property (nonatomic, strong) Class    customLayoutClass;
 
+@property (nonatomic, assign) BOOL ignoreTheDefaultProxyMethodForUICollectionViewDelegateFlowLayout;
 
-@property (nonatomic, assign) BOOL     manualCloseCellSizeDelegateMethod;
+@property (nonatomic, weak) UICollectionView      *embeddedCollectionView;
 
 @property (nonatomic, weak) UIGestureRecognizer *outerHighPriorityGestureRecognizerRelativeToCollectionViewPanGes;
 @end

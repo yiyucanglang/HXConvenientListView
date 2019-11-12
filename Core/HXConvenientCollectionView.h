@@ -22,9 +22,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSMutableArray *sourceArr;
 
-@property (nonatomic, assign) BOOL manualCloseCellSizeDelegateMethod;
-
-
+/**
+ 忽略控件默认实现的UICollectionViewDelegateFlowLayout协议的方法，this must set before set datasource and delegate
+ */
+@property (nonatomic, assign) BOOL ignoreTheDefaultProxyMethodForUICollectionViewDelegateFlowLayout;
 @end
 
 NS_ASSUME_NONNULL_END

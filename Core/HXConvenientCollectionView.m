@@ -19,7 +19,7 @@
 #pragma mark - System Method
 - (BOOL)respondsToSelector:(SEL)aSelector {
     
-    if ([NSStringFromSelector(aSelector) containsString:@"sizeForItemAtIndexPath"] && self.middleMan.manualCloseCellSizeDelegateMethod) {
+    if ([NSStringFromSelector(aSelector) containsString:@"collectionView:layout:"] && self.middleMan.ignoreTheDefaultProxyMethodForUICollectionViewDelegateFlowLayout) {
         return [super respondsToSelector:aSelector];
     }
     
@@ -182,7 +182,7 @@
 
 #pragma mark -UICollectionViewDelegateFlowLayout
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    
+
     id<HXConvenientViewModelProtocol> model = [self rowModelAtIndexPath:indexPath];
     if (model.viewHeight <= 0) {
         return ((UICollectionViewFlowLayout *)self.collectionViewLayout).itemSize;
@@ -190,13 +190,12 @@
     return CGSizeMake(model.viewWidth, model.viewHeight);
 }
 
-
-
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
     
     id<HXConvenientViewModelProtocol> model = [self sectionModelAtSection:section kind:UICollectionElementKindSectionHeader];
     return CGSizeMake(model.viewWidth, model.viewHeight);
 }
+
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section {
     id<HXConvenientViewModelProtocol> model = [self sectionModelAtSection:section kind:UICollectionElementKindSectionFooter];
     return CGSizeMake(model.viewWidth, model.viewHeight);

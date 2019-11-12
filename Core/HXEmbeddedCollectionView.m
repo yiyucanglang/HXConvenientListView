@@ -57,6 +57,8 @@
     else {
         self.collectionView.contentOffset = dataModel.contentOffset;
     }
+    
+    dataModel.embeddedCollectionView = self.collectionView;
 }
 
 #pragma mark - Private Method
@@ -65,6 +67,8 @@
         
         UICollectionViewFlowLayout *layout = [[dataModel.customLayoutClass alloc] init];
         self.collectionView = [[HXConvenientCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+        self.collectionView.ignoreTheDefaultProxyMethodForUICollectionViewDelegateFlowLayout = dataModel.ignoreTheDefaultProxyMethodForUICollectionViewDelegateFlowLayout;
+        
         self.collectionView.delegate = self;
         self.collectionView.dataSource = self;
         self.collectionView.backgroundColor = [UIColor clearColor];

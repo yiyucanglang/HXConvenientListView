@@ -8,6 +8,24 @@
 
 #import "HXBaseConvenientView.h"
 #import "HXConvenientViewTool.h"
+#import <objc/runtime.h>
+
+@implementation UIGestureRecognizer (HXConvenientView)
+
+- (void)setTag:(NSInteger)tag {
+    objc_setAssociatedObject(self, @selector(tag), @(tag), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSInteger)tag {
+    return [objc_getAssociatedObject(self, @selector(tag)) integerValue];
+}
+
+@end
+
+@interface HXBaseConvenientView()
+@property (nonatomic, assign) BOOL actionSignalIsPassing;
+
+@end
 
 @implementation HXBaseConvenientView
 @synthesize delegate  = _delegate;
@@ -18,6 +36,7 @@
 @synthesize containerHeaderFooterView = _containerHeaderFooterView;
 @synthesize containerCollectionReusableView = _containerCollectionReusableView;
 @synthesize viewIdentifier = _viewIdentifier;
+@synthesize userInfo = _userInfo;
 
 #pragma mark - Life Cycle
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -34,6 +53,7 @@
     [self UIConfig];
 }
 
+
 #pragma mark - Public Method
 - (void)UIConfig {
     
@@ -48,12 +68,29 @@
     [self setAvailableModelHeight];
 }
 
+
+- (void)actionTriggeredBy:(UIGestureRecognizer *)sender {
+    [self updateActionType:sender.tag];
+}
+
 - (void)updateActionType:(NSInteger)actionType {
     [self updateActionType:actionType userInfo:nil];
 }
 
 - (void)updateActionType:(NSInteger)actionType userInfo:(NSDictionary *)userInfo {
+    if (self.actionSignalIsPassing) {
+        return;
+    }
+    self.actionSignalIsPassing = YES;
+    
+    if (self.actionHandleBlock) {
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        dic[hxActionTypeKey] = @(actionType);
+        [dic addEntriesFromDictionary:userInfo];
+        self.actionHandleBlock(dic);
+    }
 
+    
     self.dataModel.actionType = actionType;
     if (!self.dataModel.delegate) {
         self.dataModel.delegate = self.delegate;
@@ -99,23 +136,61 @@
             }
             [invocation invoke];
         }
+        
+        self.actionSignalIsPassing = NO;
         return;
     }
 
-    [self notiDelegateWithUserInfo:userInfo];
+    [self _notiDelegateWithUserInfo:userInfo];
+    
+    self.actionSignalIsPassing = NO;
+}
+
+- (void)modelSizeAssignment {
+    [self setAvailableModelHeight];
 }
 
 - (void)setAvailableModelHeight {
 }
 
 
-#pragma mark - Private Method
-
-- (void)tapClick:(UITapGestureRecognizer *)tap {
-    [self updateActionType:0];
+- (void)showInView:(UIView *)targetView userInfo:(NSDictionary *)userInfo {
+    [self showInView:targetView userInfo:userInfo completion:nil];
 }
 
-- (void)notiDelegateWithUserInfo:(NSDictionary *)userInfo {
+- (void)showInView:(UIView *)targetView userInfo:(NSDictionary *)userInfo completion:(HXConvenientViewActionHandleBlock)completion {
+    self.userInfo = userInfo;
+    self.actionHandleBlock = completion;
+
+    [targetView addSubview:self];
+       [self mas_makeConstraints:^(MASConstraintMaker *make) {
+           make.edges.equalTo(targetView);
+    }];
+
+    //蒙层
+    [self addSubview:self.alertMaskView];
+    [self.alertMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self);
+    }];
+    [self sendSubviewToBack:self.alertMaskView];
+
+}
+
+- (void)dismiss {
+    [self dismissWithShouldSendingActionSignal:NO];
+}
+
+- (void)dismissWithShouldSendingActionSignal:(BOOL)send {
+    if (send) {
+        [self updateActionType:HXBaseConvenientViewActionType_Cancel];
+    }
+    [self removeFromSuperview];
+    self.actionHandleBlock = nil;
+}
+
+
+#pragma mark - Private Method
+- (void)_notiDelegateWithUserInfo:(NSDictionary *)userInfo {
 
     SEL sel = NSSelectorFromString(self.dataModel.delegateHandleMethodStr);
     if ([self.delegate respondsToSelector:sel]) {
@@ -178,7 +253,8 @@
 #pragma mark - Setter And Getter
 - (UITapGestureRecognizer *)tap {
     if (!_tap) {
-        _tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapClick:)];
+        _tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(actionTriggeredBy:)];
+        _tap.tag = 1111;
     }
     return _tap;
 }
@@ -196,6 +272,24 @@
     }
     return _viewIdentifier;
 }
+
+
+- (UIView *)alertMaskView {
+    if (!_alertMaskView) {
+        _alertMaskView = [[UIView alloc] init];
+        _alertMaskView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
+    }
+    return _alertMaskView;
+}
+
+- (UIView *)alertContentView {
+    if (!_alertContentView) {
+        _alertContentView = [[UIView alloc] init];
+        _alertContentView.backgroundColor = [UIColor whiteColor];
+    }
+    return _alertContentView;
+}
+
 
 #pragma mark - Dealloc
 

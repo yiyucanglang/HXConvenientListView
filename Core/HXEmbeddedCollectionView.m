@@ -67,7 +67,6 @@
         
         UICollectionViewFlowLayout *layout = [[dataModel.customLayoutClass alloc] init];
         self.collectionView = [[HXConvenientCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
-        self.collectionView.ignoreTheDefaultProxyMethodForUICollectionViewDelegateFlowLayout = dataModel.ignoreTheDefaultProxyMethodForUICollectionViewDelegateFlowLayout;
         
         self.collectionView.delegate = self;
         self.collectionView.dataSource = self;

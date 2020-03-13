@@ -43,6 +43,20 @@
     return [[[self class] alloc] init];
 }
 
+- (void)calculateSize {
+    [self calculateSizeWithReferenceFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
+}
+
+- (void)calculateSizeWithReferenceFrame:(CGRect)referenceFrame {
+    
+    static id<HXConvenientViewProtocol> view;
+    Class class = NSClassFromString(self.viewClassName);
+    if (!view || ![view isKindOfClass:class]) {
+        view = [[NSClassFromString(self.viewClassName) alloc] initWithFrame:referenceFrame];
+    }
+    [view bindingModel:self];
+}
+
 - (void)autoCalculateHeight {
     
     [self autoCalculateHeightWithSpecificFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
@@ -51,13 +65,7 @@
 - (void)autoCalculateHeightWithSpecificFrame:(CGRect)frame {
     
     self.viewHeight = 0;
-    
-    static id<HXConvenientViewProtocol> view;
-    Class class = NSClassFromString(self.viewClassName);
-    if (!view || ![view isKindOfClass:class]) {
-        view = [[NSClassFromString(self.viewClassName) alloc] initWithFrame:frame];
-    }
-    [view bindingModel:self];
+    [self calculateSizeWithReferenceFrame:frame];
 }
 
 #pragma mark - Private Method
@@ -71,6 +79,10 @@
         return _delegateHandleMethodStr;
     }
     return   [[HXConvenientViewTool customMethodDicWithViewClassName:self.viewClassName delegate:self.delegate] objectForKey:@(self.actionType)];
+}
+
+- (BOOL)isSectionModel {
+    return NO;
 }
 
 #pragma mark - Dealloc

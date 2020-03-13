@@ -12,7 +12,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HXBaseConvenientViewModel < T > : NSObject<HXConvenientViewModelProtocol>
-
+/// 此属性不设置的话，处理对应视图事件时自动设置为View所属的ViewController
+@property (nonatomic, weak) id<HXConvenientViewDelegate>         delegate;
 @property (nonatomic, strong) T customData;
 @end
 

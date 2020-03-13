@@ -40,7 +40,7 @@
     if (dataModel.delegate) {
         self.delegate = dataModel.delegate;
     }
-    [self setAvailableModelHeight];
+    [self modelSizeAssignment];
 }
 
 - (void)updateActionType:(NSInteger)actionType {
@@ -54,6 +54,10 @@
         self.dataModel.delegate = self.delegate;
     }
     [self notiDelegateWithUserInfo:userInfo];
+}
+
+- (void)modelSizeAssignment {
+    [self setAvailableModelHeight];
 }
 
 - (void)setAvailableModelHeight {

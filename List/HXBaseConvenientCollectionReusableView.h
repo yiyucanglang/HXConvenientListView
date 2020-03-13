@@ -25,7 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSString     *viewIdentifier;
 
-//must call super in the end
 - (void)bindingModel:(id<HXConvenientViewModelProtocol>)dataModel;
 @end
 

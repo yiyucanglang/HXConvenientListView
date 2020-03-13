@@ -20,18 +20,24 @@
 
 #endif
 
-//common key
+#pragma mark -Convenient Key
 static NSString * const hxBackgroundColorKey = @"BackgroundColorKey";
-static NSString * const hxImageKey   = @"ImageKey";
-static NSString * const hxTitleKey   = @"TitleKey";
-static NSString * const hxNameKey    = @"NameKey";
-static NSString * const hxContentKey = @"ContentKey";
-static NSString * const hxNoteKey    = @"NoteKey";
-static NSString * const hxTimeKey    = @"TimeKey";
-static NSString * const hxURLKey     = @"URLKey";
-static NSString * const hxFileKey    = @"FileKey";
-static NSString * const hxCustomKey  = @"CustomKey";
+static NSString * const hxImageKey           = @"ImageKey";
+static NSString * const hxTitleKey           = @"TitleKey";
+static NSString * const hxNameKey            = @"NameKey";
+static NSString * const hxContentKey         = @"ContentKey";
+static NSString * const hxNoteKey            = @"NoteKey";
+static NSString * const hxTimeKey            = @"TimeKey";
+static NSString * const hxURLKey             = @"URLKey";
+static NSString * const hxFileKey            = @"FileKey";
+static NSString * const hxCustomKey          = @"CustomKey";
+static NSString * const hxModelKey           = @"Model";
+static NSString * const hxDataKey            = @"Data";
+static NSString * const hxUserInfoKey        = @"UserInfo";
+static NSString * const hxMessageKey         = @"Message";
+static NSString * const hxActionTypeKey      = @"ActionType";
 
+#pragma mark -
 @protocol HXConvenientViewModelProtocol;
 @protocol HXConvenientViewDelegate;
 
@@ -39,7 +45,7 @@ static NSString * const hxCustomKey  = @"CustomKey";
 @property (nonatomic, strong, readonly) id<HXConvenientViewModelProtocol> dataModel;
 @property (nonatomic, weak) id<HXConvenientViewDelegate> delegate;
 @property (nonatomic, strong) UITapGestureRecognizer *tap;
-
+@property (nonatomic, strong, nullable) NSDictionary *userInfo;
 
 - (void)UIConfig;
 
@@ -50,8 +56,9 @@ static NSString * const hxCustomKey  = @"CustomKey";
 - (void)updateActionType:(NSInteger)actionType userInfo:(NSDictionary *)userInfo;
 
 @optional
+- (void)modelSizeAssignment;
 
-- (void)setAvailableModelHeight;
+- (void)setAvailableModelHeight __attribute__((deprecated("modelSizeAssignment instead.")));
 
 @property (nonatomic, weak) UITableViewCell *containerTableViewCell;
 
@@ -77,7 +84,7 @@ static NSString * const hxCustomKey  = @"CustomKey";
 @property (nonatomic, assign) NSInteger       actionType;
 @property (nonatomic, assign) BOOL forbiddenCustomTap;
 @property (nonatomic, strong) NSDictionary *userInfo;
-
+@property (nonatomic, assign, readonly) BOOL isSectionModel;
 
 @optional
 
@@ -95,42 +102,43 @@ static NSString * const hxCustomKey  = @"CustomKey";
 
 //for UITableView
 @property (nonatomic, assign) UITableViewCellSelectionStyle cellSelectionStyle;
+
+//read property
 @property (nonatomic, strong) NSIndexPath    *indexPath;
-@property (nonatomic, assign) NSInteger       section;
+@property (nonatomic, assign) NSInteger       section DEPRECATED_ATTRIBUTE;
 @property (nonatomic, weak) UITableView      *tableView;
 
 //for UICollectionView
 @property (nonatomic, weak) UICollectionView      *collectionView;
 
-@property (nonatomic, weak) UIView                *associatedView;//uiew or cell
+@property (nonatomic, weak) UIView                *associatedView;//uiew or cell 
 
 + (instancetype)model;
 
-- (void)autoCalculateHeight;
+- (void)calculateSize;
 
-- (void)autoCalculateHeightWithSpecificFrame:(CGRect)frame;
+- (void)calculateSizeWithReferenceFrame:(CGRect)referenceFrame;
+
+- (void)autoCalculateHeight __attribute__((deprecated("calculateSize instead.")));
+
+- (void)autoCalculateHeightWithSpecificFrame:(CGRect)frame __attribute__((deprecated("calculateSizeWithReferenceFrame instead.")));
 @end
 
+#pragma mark -
 @protocol HXConvenientTableViewMultiSectionsProtocol <NSObject>
-@property (nonatomic, strong) id<HXConvenientViewModelProtocol> headModel;
-
-@property (nonatomic, strong) id<HXConvenientViewModelProtocol> footModel;
-
-@property (nonatomic, strong) NSMutableArray<id<HXConvenientViewModelProtocol >> *rowsArr;
+@property (nonatomic, strong, nullable) id<HXConvenientViewModelProtocol>        headModel;
+@property (nonatomic, strong, nullable) id<HXConvenientViewModelProtocol>        footModel;
+@property (nonatomic, strong) NSMutableArray<id<HXConvenientViewModelProtocol>> *rowsArr;
+@property (nonatomic, assign, readonly) BOOL isSectionModel;
 
 @optional
-@property (nonatomic, assign) NSInteger       section;
-
-@property (nonatomic, weak) UITableView      *tableView;
-
-//for UICollectionView
+@property (nonatomic, assign) NSInteger            section;
+@property (nonatomic, weak) UITableView           *tableView;
 @property (nonatomic, weak) UICollectionView      *collectionView;
-
 + (instancetype)model;
-
 @end
 
-
+#pragma mark -
 @protocol HXConvenientViewDelegate <NSObject>
 
 @optional

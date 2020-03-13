@@ -20,9 +20,13 @@ NS_ASSUME_NONNULL_BEGIN
 //as above default: UITableViewHeaderFooterView
 @property (nonatomic, strong) Class headFooterContainerClass;
 
+/**
+允许(id<HXConvenientViewModelProtocol>)和(id<HXConvenientTableViewMultiSectionsProtocol>) 混用
+混用时tableView会自动转换成多section数据源模式，混用时id<HXConvenientViewModelProtocol>对象的indexPath.row = 0, section = index of sourceArr。
+*/
 @property (nonatomic, strong) NSMutableArray *sourceArr;
 
-//attention: below property must set before delegate set
+//Attention: this property must set before delegate set
 @property (nonatomic, assign) BOOL openEstimatedCellHeight;
 
 @end

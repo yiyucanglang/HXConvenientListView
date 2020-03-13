@@ -11,23 +11,62 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-//customSwitchMethod = [NSString stringWithFormat:@"handleActionIn%@WithModel:view:", NSStringFromClass([self class])];
-
+#pragma mark -CodeSnippet
 /*
- Attention:触发delegate方法顺序说明 假设下面call的方法delegate都已实现
- 
- call  data.model.delegateHandleMethodStr
- call  customSwitchMethod
- call  <HXConvenientViewDelegate>
- 
+#pragma mark <#ViewClass#>
+- (void)handle<#ViewClass#>Action:(NSInteger)actionType userInfo:(NSDictionary *)userInfo view:(<#ViewClass#> *)view {
+    <#begin#>
+}
+
+#pragma mark <#ViewClass#>
+-(void)handleActionIn<#ViewClass#>WithModel:(<#ModelClass#> *)model view:(<#ViewClass#> *)view {
+    <#begin#>
+}
 */
+
+
+typedef NS_ENUM(NSInteger, HXBaseConvenientViewActionType) {
+    HXBaseConvenientViewActionType_Cancel = -1000,
+};
+
+
+typedef void(^HXConvenientViewActionHandleBlock)(NSDictionary * _Nullable userInfo);
+
+
+@interface  UIGestureRecognizer (HXConvenientView)
+@property (nonatomic, assign) NSInteger tag;
+@end
+
+
 
 @interface HXBaseConvenientView : UIView<HXConvenientViewProtocol>
 
 @property (nonatomic, strong) NSString     *viewIdentifier;
 
-//must call super in the end
+@property (nonatomic, strong) UIView *alertMaskView;
+@property (nonatomic, strong) UIView *alertContentView;
+
+/// 注意循环引用问题
+@property (nonatomic, copy, nullable) HXConvenientViewActionHandleBlock actionHandleBlock;
+
+
 - (void)bindingModel:(id<HXConvenientViewModelProtocol>)dataModel;
+
+/// sender 可以是任何拥有tag属性的对象
+/// @param sender 触发事件的对象
+- (void)actionTriggeredBy:(id)sender;
+
+- (void)showInView:(UIView *)targetView userInfo:(NSDictionary * _Nullable)userInfo;
+
+- (void)showInView:(UIView *)targetView
+          userInfo:(NSDictionary * _Nullable)userInfo
+        completion:(HXConvenientViewActionHandleBlock _Nullable)completion;
+
+
+- (void)dismiss;
+
+- (void)dismissWithShouldSendingActionSignal:(BOOL)send;
+
 @end
 
 NS_ASSUME_NONNULL_END

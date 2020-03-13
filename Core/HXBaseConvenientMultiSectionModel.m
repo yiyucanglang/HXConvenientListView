@@ -35,6 +35,10 @@
     return _rowsArr;
 }
 
+- (BOOL)isSectionModel {
+    return YES;
+}
+
 #pragma mark - Dealloc
 
 @end

@@ -14,12 +14,34 @@
 @property (nonatomic, weak) HXConvenientCollectionView *middleMan;
 @end
 
+
+@interface HXConvenientCollectionView()
+<
+    UICollectionViewDataSource,
+    UICollectionViewDelegateFlowLayout
+>
+@property (nonatomic, strong) HXCollectionViewPropertyInterceptor *delegateInterceptor;
+@property (nonatomic, strong) HXCollectionViewPropertyInterceptor *datasourceInterceptor;
+@property (nonatomic, assign) BOOL useItemSizeOfFlowlayout;
+@property (nonatomic, assign) BOOL useHeaderReferenceSizeOfFlowlayout;
+@property (nonatomic, assign) BOOL useFooterReferenceSizeOfFlowlayout;
+@end
+
+
 @implementation HXCollectionViewPropertyInterceptor
 
 #pragma mark - System Method
 - (BOOL)respondsToSelector:(SEL)aSelector {
     
-    if ([NSStringFromSelector(aSelector) containsString:@"collectionView:layout:"] && self.middleMan.ignoreTheDefaultProxyMethodForUICollectionViewDelegateFlowLayout) {
+    if ([NSStringFromSelector(aSelector) hasPrefix:@"collectionView:layout:sizeForItemAtIndexPath:"] && self.middleMan.useItemSizeOfFlowlayout) {
+        return [super respondsToSelector:aSelector];
+    }
+    
+    if ([NSStringFromSelector(aSelector) hasPrefix:@"collectionView:layout:referenceSizeForHeaderInSection:"] && self.middleMan.useHeaderReferenceSizeOfFlowlayout) {
+        return [super respondsToSelector:aSelector];
+    }
+    
+    if ([NSStringFromSelector(aSelector) hasPrefix:@"collectionView:layout:referenceSizeForFooterInSection:"] && self.middleMan.useFooterReferenceSizeOfFlowlayout) {
         return [super respondsToSelector:aSelector];
     }
     
@@ -70,18 +92,9 @@
     
 }
 
-
 @end
 
-@interface HXConvenientCollectionView()
-<
-    UICollectionViewDataSource,
-    UICollectionViewDelegateFlowLayout
->
-@property (nonatomic, strong) HXCollectionViewPropertyInterceptor *delegateInterceptor;
-@property (nonatomic, strong) HXCollectionViewPropertyInterceptor *datasourceInterceptor;
 
-@end
 
 @implementation HXConvenientCollectionView
 #pragma mark - Life Cycle
@@ -93,14 +106,27 @@
 }
 
 - (void)setDelegate:(id<UICollectionViewDelegate>)delegate {
+    
+    UICollectionViewFlowLayout *referenceLayout = [UICollectionViewFlowLayout new];
+    
+    UICollectionViewFlowLayout *flowlayout = self.collectionViewLayout;
+    if ([flowlayout respondsToSelector:@selector(itemSize)] && !CGSizeEqualToSize(flowlayout.itemSize, referenceLayout.itemSize)) {
+        self.useItemSizeOfFlowlayout = YES;
+    }
+    if ([flowlayout respondsToSelector:@selector(headerReferenceSize)] && !CGSizeEqualToSize(flowlayout.headerReferenceSize, referenceLayout.headerReferenceSize)) {
+        self.useHeaderReferenceSizeOfFlowlayout = YES;
+    }
+    if ([flowlayout respondsToSelector:@selector(footerReferenceSize)] && !CGSizeEqualToSize(flowlayout.footerReferenceSize, referenceLayout.footerReferenceSize)) {
+        self.useHeaderReferenceSizeOfFlowlayout = YES;
+    }
+    
+    
     self.delegateInterceptor.originalReceiver = delegate;
     [super setDelegate:(id<UICollectionViewDelegate>)self.delegateInterceptor];
 }
 
 #pragma mark - Public Method
-- (void)reloadData {
-    [super reloadData];
-}
+
 
 #pragma mark - Private Method
 - (BOOL)multiSection {
@@ -238,4 +264,5 @@
     }
     return _sourceArr;
 }
+
 @end

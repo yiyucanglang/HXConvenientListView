@@ -80,6 +80,8 @@
 @property (nonatomic, strong) HXTableViewPropertyInterceptor *delegateInterceptor;
 
 @property (nonatomic, strong) HXTableViewPropertyInterceptor *datasourceInterceptor;
+@property (nonatomic, assign) BOOL multiSectionsFlag;
+
 @end
 
 @implementation HXConvenientTableView
@@ -96,57 +98,88 @@
     [super setDelegate:(id<UITableViewDelegate>)self.delegateInterceptor];
 }
 
-- (void)setEstimatedRowHeight:(CGFloat)estimatedRowHeight {
-    HXLog(@"-------------------set estimatedRowHeight");
-    [super setEstimatedRowHeight:estimatedRowHeight];
+- (void)reloadData {
+    self.multiSectionsFlag = NO;
+    NSInteger num = 0;
+    for (id<HXConvenientTableViewMultiSectionsProtocol> item in self.sourceArr) {
+        if (item.isSectionModel) {
+            num++;
+        }
+        else {
+            num--;
+        }
+    }
+    if (abs(num) != self.sourceArr.count || num > 0) {
+        self.multiSectionsFlag = YES;
+    }
+    
+    [super reloadData];
 }
 
 #pragma mark - Public Method
-- (void)reloadData {
-    [super reloadData];
-}
+
 
 #pragma mark - Private Method
 
 #pragma mark Assist Method
 - (id<HXConvenientViewModelProtocol>)_rowModelAtIndexPath:(NSIndexPath *)indexPath {
     
-    id<HXConvenientTableViewMultiSectionsProtocol> model = self.sourceArr[indexPath.section];
-    if ([model conformsToProtocol:@protocol(HXConvenientTableViewMultiSectionsProtocol)]) {
-        return model.rowsArr[indexPath.row];
+    NSInteger index = 0;
+    if (self.multiSectionsFlag) {
+        
+        id<HXConvenientTableViewMultiSectionsProtocol> model = self.sourceArr[indexPath.section];
+        if (model.isSectionModel) {
+            if ([model respondsToSelector:@selector(setSection:)]) {
+                model.section = index;
+            }
+            if ([model respondsToSelector:@selector(setTableView:)]) {
+                model.tableView = self;
+            }
+            return model.rowsArr[indexPath.row];
+        }
+        return (id<HXConvenientViewModelProtocol>)model;
     }
     
-    return model;
+    return self.sourceArr[indexPath.row];
+    
 }
 
 - (id<HXConvenientViewModelProtocol>)_sectionModelAtSection:(NSInteger)section head:(BOOL)head {
     
+    if (self.sourceArr.count <= section) {
+        return nil;
+    }
     id<HXConvenientTableViewMultiSectionsProtocol> model = self.sourceArr[section];
     
-    if ([model conformsToProtocol:@protocol(HXConvenientTableViewMultiSectionsProtocol)]) {
-        if (self.sourceArr.count > section) {
+    if (model.isSectionModel) {
             if (head) {
                 return model.headModel;
             }
             return model.footModel;
-        }
     }
     return nil;
 }
 
 
 
+
 #pragma mark - Delegate
 #pragma UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.sourceArr.count;
+    if (self.multiSectionsFlag) {
+        return self.sourceArr.count;
+    }
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (!self.multiSectionsFlag) {
+        return self.sourceArr.count;
+    }
     
     id<HXConvenientTableViewMultiSectionsProtocol> model = self.sourceArr[section];
     
-    if ([model conformsToProtocol:@protocol(HXConvenientTableViewMultiSectionsProtocol)]) {
+    if (model.isSectionModel) {
         return model.rowsArr.count;
     }
     
@@ -155,7 +188,6 @@
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     return [self hx_cellWithIndexPath:indexPath dataModel:[self _rowModelAtIndexPath:indexPath] containerCellClass:self.cellContainerClass];
 }
 
@@ -169,9 +201,8 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    CGFloat height = [self _rowModelAtIndexPath:indexPath].viewHeight;
-    HXLog(@"------rowheight:%@------------- height:%@", @(self.rowHeight), @(height));
     
+    CGFloat height = [self _rowModelAtIndexPath:indexPath].viewHeight;
     if (height <= 0) {
         return self.rowHeight;
     }

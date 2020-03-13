@@ -63,6 +63,9 @@
     if ([model respondsToSelector:@selector(setIndexPath:)]) {
         model.indexPath = indexPath;
     }
+    if ([model respondsToSelector:@selector(setSection:)]) {
+        model.section = model.indexPath.section;
+    }
     
     
     if ([viewClass isSubclassOfClass:[UITableViewCell class]]) {

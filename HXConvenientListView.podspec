@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'HXConvenientListView'
-  s.version          = '1.0.5'
+  s.version          = '1.0.6'
   s.summary          = '简化使用列表对象时的代码书写量,例如数据源配置、事件回调'
 
   s.homepage         = 'https://gitee.com/huanxiong'
@@ -12,7 +12,9 @@ Pod::Spec.new do |s|
 
   s.static_framework = true
   s.ios.deployment_target = '8.0'
-
+  
+  s.default_subspec = 'Core'
+  
   s.subspec 'Core' do |core|
     core.public_header_files = 'Core/*{h}'
     core.source_files = 'Core/*.{h,m}'

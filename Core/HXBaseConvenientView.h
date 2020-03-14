@@ -33,12 +33,6 @@ typedef NS_ENUM(NSInteger, HXBaseConvenientViewActionType) {
 typedef void(^HXConvenientViewActionHandleBlock)(NSDictionary * _Nullable userInfo);
 
 
-@interface  UIGestureRecognizer (HXConvenientView)
-@property (nonatomic, assign) NSInteger tag;
-@end
-
-
-
 @interface HXBaseConvenientView : UIView<HXConvenientViewProtocol>
 
 @property (nonatomic, strong) NSString     *viewIdentifier;
@@ -52,8 +46,9 @@ typedef void(^HXConvenientViewActionHandleBlock)(NSDictionary * _Nullable userIn
 
 - (void)bindingModel:(id<HXConvenientViewModelProtocol>)dataModel;
 
-/// sender 可以是任何拥有tag属性的对象
-/// @param sender 触发事件的对象
+
+/// 事件触发
+/// @param sender Button Or UIGestureRecognizer
 - (void)actionTriggeredBy:(id)sender;
 
 - (void)showInView:(UIView *)targetView userInfo:(NSDictionary * _Nullable)userInfo;

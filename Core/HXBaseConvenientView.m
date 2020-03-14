@@ -10,18 +10,6 @@
 #import "HXConvenientViewTool.h"
 #import <objc/runtime.h>
 
-@implementation UIGestureRecognizer (HXConvenientView)
-
-- (void)setTag:(NSInteger)tag {
-    objc_setAssociatedObject(self, @selector(tag), @(tag), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (NSInteger)tag {
-    return [objc_getAssociatedObject(self, @selector(tag)) integerValue];
-}
-
-@end
-
 @interface HXBaseConvenientView()
 @property (nonatomic, assign) BOOL actionSignalIsPassing;
 
@@ -70,7 +58,14 @@
 
 
 - (void)actionTriggeredBy:(UIGestureRecognizer *)sender {
-    [self updateActionType:sender.tag];
+    NSInteger actionType;
+    if ([sender isKindOfClass:[UIView class]]) {
+        actionType = ((UIView *)sender).tag;
+    }
+    else {
+        actionType = sender.view.tag;
+    }
+    [self updateActionType:actionType];
 }
 
 - (void)updateActionType:(NSInteger)actionType {
@@ -254,7 +249,6 @@
 - (UITapGestureRecognizer *)tap {
     if (!_tap) {
         _tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(actionTriggeredBy:)];
-        _tap.tag = 1111;
     }
     return _tap;
 }
